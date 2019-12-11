@@ -180,6 +180,9 @@ class Pcap : public Nan::ObjectWrap {
     static void CALLBACK OnPacket(void* data, BOOLEAN didTimeout) {
       assert(!didTimeout);
       uv_async_t* async = (uv_async_t*)data;
+      Pcap *obj = (Pcap*)async->data;
+      if (obj->closing)
+        return;
       int r = uv_async_send(async);
       assert(r == 0);
     }
