@@ -98,6 +98,7 @@ class Pcap : public Nan::ObjectWrap {
 
     bool close() {
       if (pcap_handle && !closing) {
+        closing = true;
 #ifdef _WIN32
         if (wait) {
           UnregisterWait(wait);
@@ -107,7 +108,6 @@ class Pcap : public Nan::ObjectWrap {
 #else
         uv_poll_stop(&poll_handle);
 #endif
-        closing = true;
         cleanup();
         return true;
       }
